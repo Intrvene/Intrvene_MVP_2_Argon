@@ -8,11 +8,19 @@
 const pin_t motorPin = D3;
 
 // Create Uuids for BLE Service and Characteristic
+
 const char* genServiceUuid = "cd2239b0-a7b5-4695-8bf1-9809a03cb226";
 const char* fourSevenEight = "cd2239b1-a7b5-4695-8bf1-9809a03cb226";
 const char* boxBreathing = "cd2239b2-a7b5-4695-8bf1-9809a03cb226";
 const char* fullPower = "cd2239b3-a7b5-4695-8bf1-9809a03cb226";
 const char* lowPower = "cd2239b4-a7b5-4695-8bf1-9809a03cb226";
+
+BleUuid genServiceUuid = BleUuid(genServiceUuid);
+BleUuid fourSevenEightUuid = BleUuid(fourSevenEight);
+BleUuid boxBreathingUuid = BleUuid(boxBreathing);
+BleUuid fullPowerUuid = BleUuid(fullPower);
+BleUuid lowPowerUuid = BleUuid(lowPower);
+
 BleCharacteristic fourSevenEightChr("Four-Seven-Eight", BleCharacteristicProperty::WRITE_WO_RSP, fourSevenEight, genServiceUuid, bleCallback, (void*) fourSevenEight);
 BleCharacteristic boxBreathingChr("Box Breathing", BleCharacteristicProperty::WRITE_WO_RSP, boxBreathing, genServiceUuid, bleCallback, (void*) boxBreathing);
 BleCharacteristic fullPowerChr("Full Power", BleCharacteristicProperty::WRITE_WO_RSP, fullPower, genServiceUuid, bleCallback, (void*) fullPower);
@@ -130,13 +138,13 @@ static void bleCallback(const uint8_t* data, size_t len, const BlePeerDevice& pe
     }
 
     // Handle exercise choice from BLE input
-    if(context == fourSevenEight){
+    if(context == fourSevenEightUuid.rawBytes){
         fourSevenEightExercise();
-    } else if (context == boxBreathing){
+    } else if (context == boxBreathingUuid.rawBytes){
         boxBreathingExercise();
-    } else if (context == fullPower){
+    } else if (context == fullPowerUuid.rawBytes){
         fullVibrationPower();
-    } else if (context == lowPower){
+    } else if (context == lowPowerUuid.rawBytes){
         lowVibrationPower();
     }
 }
