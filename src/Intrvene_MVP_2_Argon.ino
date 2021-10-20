@@ -10,15 +10,10 @@ const pin_t motorPin = D3;
 // Create Uuids for BLE Service and Characteristic
 
 const char* genServiceUuid = "cd2239b**0**-a7b5-4695-8bf1-9809a03cb226";
-const char* fourSevenEight = "cd2239b1-a7b5-4695-8bf1-9809a03cb226";
-const char* boxBreathing = "cd2239b2-a7b5-4695-8bf1-9809a03cb226";
-const char* fullPower = "cd2239b3-a7b5-4695-8bf1-9809a03cb226";
-const char* lowPower = "cd2239b4-a7b5-4695-8bf1-9809a03cb226";
+const char* genChrUuid = "cd2239b1-a7b5-4695-8bf1-9809a03cb226";
 
-BleCharacteristic fourSevenEightChr("Four-Seven-Eight", BleCharacteristicProperty::WRITE_WO_RSP, fourSevenEight, genServiceUuid, bleCallback, (void*) fourSevenEight);
-BleCharacteristic boxBreathingChr("Box Breathing", BleCharacteristicProperty::WRITE_WO_RSP, boxBreathing, genServiceUuid, bleCallback, (void*) boxBreathing);
-BleCharacteristic fullPowerChr("Full Power", BleCharacteristicProperty::WRITE_WO_RSP, fullPower, genServiceUuid, bleCallback, (void*) fullPower);
-BleCharacteristic lowPowerChr("Low Power", BleCharacteristicProperty::WRITE_WO_RSP, lowPower, genServiceUuid, bleCallback, (void*) lowPower);
+BleCharacteristic genChr("General Characteristic", BleCharacteristicProperty::WRITE_WO_RSP, genChrUuid, genServiceUuid, bleCallback);
+
 
 // Function to increase vibration power
 // (0% - 100%) over given duration (seconds)
@@ -33,19 +28,6 @@ static void increaseOverTime(int duration){
         float percentage = (float)(currentTime-startTime)/(float)fullTime;
         float test = (255*percentage);
         int powerLevel = (int) test;
-        /*Serial.print("duration: ");
-        Serial.print(duration);
-        Serial.print(", Start Time: ");
-        Serial.print(startTime);
-        Serial.print(", CurrentTime: ");
-        Serial.print(currentTime);
-        Serial.print(", difference: ");
-        Serial.print(currentTime-startTime);
-        Serial.print(", percentage: ");
-        Serial.print(percentage);
-        Serial.print(", powerLevel: ");
-        Serial.print(powerLevel);
-        Serial.println();*/
         analogWrite(motorPin, powerLevel, 200);
     }
     analogWrite(motorPin, 0);
@@ -161,13 +143,13 @@ static void bleCallback(const uint8_t* data, size_t len, const BlePeerDevice& pe
     }
 
     // Handle exercise choice from BLE input
-    if(context == fourSevenEight){
+    if(data[0] == 0){
         fourSevenEightExercise();
-    } else if (context == boxBreathing){
+    } else if (data[0] == 1){
         boxBreathingExercise();
-    } else if (context == fullPower){
+    } else if (data[0] == 2){
         fullVibrationPower();
-    } else if (context == lowPower){
+    } else if (data[0] == 3){
         lowVibrationPower();
     }
 }
@@ -180,17 +162,11 @@ void setup() {
 
     // Set up Bluetooth and begin advertising
     BleUuid genService(genServiceUuid);
-    BLE.addCharacteristic(fourSevenEightChr);
-    BLE.addCharacteristic(boxBreathingChr);
-    BLE.addCharacteristic(fullPowerChr);
-    BLE.addCharacteristic(lowPowerChr);
+    BLE.addCharacteristic(genChr);
     BleAdvertisingData advData;
     advData.appendLocalName("Intrvene");
     advData.appendServiceUUID(genService);
     BLE.advertise(&advData);
 }
 
-void loop() {
-    fourSevenEightExercise();
-    //increaseOverTime(4);
-}
+void loop() {}
