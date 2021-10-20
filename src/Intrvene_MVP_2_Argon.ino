@@ -15,12 +15,6 @@ const char* boxBreathing = "cd2239b2-a7b5-4695-8bf1-9809a03cb226";
 const char* fullPower = "cd2239b3-a7b5-4695-8bf1-9809a03cb226";
 const char* lowPower = "cd2239b4-a7b5-4695-8bf1-9809a03cb226";
 
-BleUuid genServiceUuid = BleUuid(genServiceUuid);
-BleUuid fourSevenEightUuid = BleUuid(fourSevenEight);
-BleUuid boxBreathingUuid = BleUuid(boxBreathing);
-BleUuid fullPowerUuid = BleUuid(fullPower);
-BleUuid lowPowerUuid = BleUuid(lowPower);
-
 BleCharacteristic fourSevenEightChr("Four-Seven-Eight", BleCharacteristicProperty::WRITE_WO_RSP, fourSevenEight, genServiceUuid, bleCallback, (void*) fourSevenEight);
 BleCharacteristic boxBreathingChr("Box Breathing", BleCharacteristicProperty::WRITE_WO_RSP, boxBreathing, genServiceUuid, bleCallback, (void*) boxBreathing);
 BleCharacteristic fullPowerChr("Full Power", BleCharacteristicProperty::WRITE_WO_RSP, fullPower, genServiceUuid, bleCallback, (void*) fullPower);
@@ -138,13 +132,13 @@ static void bleCallback(const uint8_t* data, size_t len, const BlePeerDevice& pe
     }
 
     // Handle exercise choice from BLE input
-    if(context == fourSevenEightUuid.rawBytes){
+    if(context == fourSevenEight){
         fourSevenEightExercise();
-    } else if (context == boxBreathingUuid.rawBytes){
+    } else if (context == boxBreathing){
         boxBreathingExercise();
-    } else if (context == fullPowerUuid.rawBytes){
+    } else if (context == fullPower){
         fullVibrationPower();
-    } else if (context == lowPowerUuid.rawBytes){
+    } else if (context == lowPower){
         lowVibrationPower();
     }
 }
@@ -167,4 +161,10 @@ void setup() {
     BLE.advertise(&advData);
 }
 
-void loop() {}
+void loop() {
+    analogWrite(motorPin, 255, 200);
+    delay(4000);
+    analogWrite(motorPin, 0);
+    delay(1000);
+    fourSevenEightExercise();
+}

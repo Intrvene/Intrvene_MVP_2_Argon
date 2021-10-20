@@ -27,15 +27,17 @@ void loop();
 const pin_t motorPin = D3;
 
 // Create Uuids for BLE Service and Characteristic
+
 const char* genServiceUuid = "cd2239b0-a7b5-4695-8bf1-9809a03cb226";
 const char* fourSevenEight = "cd2239b1-a7b5-4695-8bf1-9809a03cb226";
-const char* boxBreathing = "cd2239b1-a7b5-4695-8bf1-9809a03cb226";
-const char* fullPower = "cd2239b1-a7b5-4695-8bf1-9809a03cb226";
-const char* lowPower = "cd2239b1-a7b5-4695-8bf1-9809a03cb226";
-BleCharacteristic fourSevenEightChr("Four-Seven-Eight", BleCharacteristicProperty::WRITE_WO_RSP, fourSevenEight, genServiceUuid, bleCallback, (void *)fourSevenEight);
-BleCharacteristic boxBreathingChr("Box Breathing", BleCharacteristicProperty::WRITE_WO_RSP, boxBreathing, genServiceUuid, bleCallback, (void *)boxBreathing);
-BleCharacteristic fullPowerChr("Full Power", BleCharacteristicProperty::WRITE_WO_RSP, fullPower, genServiceUuid, bleCallback, (void *)fullPower);
-BleCharacteristic lowPowerChr("Low Power", BleCharacteristicProperty::WRITE_WO_RSP, lowPower, genServiceUuid, bleCallback, (void *)lowPower);
+const char* boxBreathing = "cd2239b2-a7b5-4695-8bf1-9809a03cb226";
+const char* fullPower = "cd2239b3-a7b5-4695-8bf1-9809a03cb226";
+const char* lowPower = "cd2239b4-a7b5-4695-8bf1-9809a03cb226";
+
+BleCharacteristic fourSevenEightChr("Four-Seven-Eight", BleCharacteristicProperty::WRITE_WO_RSP, fourSevenEight, genServiceUuid, bleCallback, (void*) fourSevenEight);
+BleCharacteristic boxBreathingChr("Box Breathing", BleCharacteristicProperty::WRITE_WO_RSP, boxBreathing, genServiceUuid, bleCallback, (void*) boxBreathing);
+BleCharacteristic fullPowerChr("Full Power", BleCharacteristicProperty::WRITE_WO_RSP, fullPower, genServiceUuid, bleCallback, (void*) fullPower);
+BleCharacteristic lowPowerChr("Low Power", BleCharacteristicProperty::WRITE_WO_RSP, lowPower, genServiceUuid, bleCallback, (void*) lowPower);
 
 // Function to increase vibration power
 // (0% - 100%) over given duration (seconds)
@@ -178,4 +180,10 @@ void setup() {
     BLE.advertise(&advData);
 }
 
-void loop() {}
+void loop() {
+    analogWrite(motorPin, 255, 200);
+    delay(4000);
+    analogWrite(motorPin, 0);
+    delay(1000);
+    fourSevenEightExercise();
+}
