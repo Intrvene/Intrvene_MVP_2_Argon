@@ -23,14 +23,30 @@ BleCharacteristic lowPowerChr("Low Power", BleCharacteristicProperty::WRITE_WO_R
 // Function to increase vibration power
 // (0% - 100%) over given duration (seconds)
 static void increaseOverTime(int duration){
+    Serial.println("breathing in");
+
     int startTime = millis();
     int fullTime = duration*1000;
     int currentTime = millis();
     while((currentTime - startTime) < fullTime){
-        float percentage = (currentTime-startTime)/fullTime;
-        int powerLevel = (int)(255*percentage);
-        analogWrite(motorPin, powerLevel, 200);
         currentTime = millis();
+        float percentage = (float)(currentTime-startTime)/(float)fullTime;
+        float test = (255*percentage);
+        int powerLevel = (int) test;
+        /*Serial.print("duration: ");
+        Serial.print(duration);
+        Serial.print(", Start Time: ");
+        Serial.print(startTime);
+        Serial.print(", CurrentTime: ");
+        Serial.print(currentTime);
+        Serial.print(", difference: ");
+        Serial.print(currentTime-startTime);
+        Serial.print(", percentage: ");
+        Serial.print(percentage);
+        Serial.print(", powerLevel: ");
+        Serial.print(powerLevel);
+        Serial.println();*/
+        analogWrite(motorPin, powerLevel, 200);
     }
     analogWrite(motorPin, 0);
 }
@@ -38,12 +54,16 @@ static void increaseOverTime(int duration){
 // Function to decrease vibration power
 // (100% - 0%) over given duration (seconds)
 static void decreaseOverTime(int duration){
+    Serial.println("breathing out");
     int startTime = millis();
     int fullTime = duration*1000;
     int currentTime = millis();
     while((currentTime - startTime) < fullTime){
-        float percentage = 1-((currentTime-startTime)/fullTime);
+        float percentage = 1-((float)(currentTime-startTime)/(float)fullTime);
         int powerLevel = (int)(255*percentage);
+        Serial.println(millis());
+        Serial.print(powerLevel);
+        Serial.println("%");
         analogWrite(motorPin, powerLevel, 200);
         currentTime = millis();
     }
@@ -53,6 +73,7 @@ static void decreaseOverTime(int duration){
 // Function to use vibrating disk
 // at full power for given duration (255/255)
 static void fullPowerDuration(int duration){
+        Serial.println("test3");
         analogWrite(motorPin, 255, 200);
         delay(duration*1000);
         analogWrite(motorPin, 0);
@@ -61,6 +82,7 @@ static void fullPowerDuration(int duration){
 // Function to use vibrating disk
 // at low power for given duration (50/255)
 static void lowPowerDuration(int duration){
+        Serial.println("test4");
     analogWrite(motorPin, 50, 200);
     delay(duration*1000);
     analogWrite(motorPin, 0);
@@ -70,13 +92,17 @@ static void lowPowerDuration(int duration){
 // duration, at the given power level,
 // with the freq. of the given interval (ms)
 static void pulseDuration(int duration, int percentPower, int msInterval){
+    Serial.println("hold breath");
     int startTime = millis();
     int fullTime = duration*1000;
     int currentTime = millis();
     while((currentTime-startTime) < fullTime){
-        analogWrite(motorPin, (int)(percentPower/100)*255, 200);
+        analogWrite(motorPin, 200, 200);
+        Serial.println("pulse");
+        Serial.println((int)(percentPower/100)*255);
         delay(msInterval);
-        analogWrite(motorPin, 0);
+        analogWrite(motorPin, 50,200);
+        Serial.println("off");
         delay(msInterval);
         currentTime = millis();
     }
@@ -165,4 +191,6 @@ void setup() {
 }
 
 void loop() {
+    fourSevenEightExercise();
+    //increaseOverTime(4);
 }
