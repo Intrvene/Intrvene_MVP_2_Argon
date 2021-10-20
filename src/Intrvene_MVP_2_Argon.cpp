@@ -28,7 +28,7 @@ const pin_t motorPin = D3;
 
 // Create Uuids for BLE Service and Characteristic
 
-const char* genServiceUuid = "cd2239b0-a7b5-4695-8bf1-9809a03cb226";
+const char* genServiceUuid = "cd2239b**0**-a7b5-4695-8bf1-9809a03cb226";
 const char* fourSevenEight = "cd2239b1-a7b5-4695-8bf1-9809a03cb226";
 const char* boxBreathing = "cd2239b2-a7b5-4695-8bf1-9809a03cb226";
 const char* fullPower = "cd2239b3-a7b5-4695-8bf1-9809a03cb226";
@@ -49,6 +49,7 @@ static void increaseOverTime(int duration){
         float percentage = (currentTime-startTime)/fullTime;
         int powerLevel = (int)(255*percentage);
         analogWrite(motorPin, powerLevel, 200);
+        currentTime = millis();
     }
     analogWrite(motorPin, 0);
 }
@@ -63,6 +64,7 @@ static void decreaseOverTime(int duration){
         float percentage = 1-((currentTime-startTime)/fullTime);
         int powerLevel = (int)(255*percentage);
         analogWrite(motorPin, powerLevel, 200);
+        currentTime = millis();
     }
     analogWrite(motorPin, 0);
 }
@@ -95,6 +97,7 @@ static void pulseDuration(int duration, int percentPower, int msInterval){
         delay(msInterval);
         analogWrite(motorPin, 0);
         delay(msInterval);
+        currentTime = millis();
     }
 }
 
@@ -181,9 +184,5 @@ void setup() {
 }
 
 void loop() {
-    analogWrite(motorPin, 255, 200);
-    delay(4000);
-    analogWrite(motorPin, 0);
-    delay(1000);
     fourSevenEightExercise();
 }

@@ -6,5 +6,5 @@
         "*.ino": "cpp"
     },
     "particle.firmwareVersion": "3.1.0",
-    "particle.targetDevice": "intrvene_01"
+    "particle.targetDevice": "Vibrating_Disk_Argon"
 }
